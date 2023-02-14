@@ -15,7 +15,7 @@ format:
 
 website:
   title: "radar"
-  description: "Radar exploration and documentation"
+  description: "Radar algorithms"
   execute: 
     enabled: false
   twitter-card: true

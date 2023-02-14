@@ -1,6 +1,6 @@
 from pkg_resources import parse_version
 from configparser import ConfigParser
-import setuptools
+import setuptools, shlex
 assert parse_version(setuptools.__version__)>=parse_version('36.2')
 
 # note: all settings are in settings.ini; edit there, not here
@@ -24,7 +24,8 @@ statuses = [ '1 - Planning', '2 - Pre-Alpha', '3 - Alpha',
     '4 - Beta', '5 - Production/Stable', '6 - Mature', '7 - Inactive' ]
 py_versions = '3.6 3.7 3.8 3.9 3.10'.split()
 
-requirements = cfg.get('requirements','').split()
+requirements = shlex.split(cfg.get('requirements', ''))
+if cfg.get('pip_requirements'): requirements += shlex.split(cfg.get('pip_requirements', ''))
 min_python = cfg['min_python']
 lic = licenses.get(cfg['license'].lower(), (cfg['license'], None))
 dev_requirements = (cfg.get('dev_requirements') or '').split()
@@ -49,7 +50,6 @@ setuptools.setup(
     zip_safe = False,
     entry_points = {
         'console_scripts': cfg.get('console_scripts','').split(),
-        'mkdocs.plugins': [ 'rm_num_prefix = nbdev.mkdocs:RmNumPrefix' ],
         'nbdev': [f'{cfg.get("lib_path")}={cfg.get("lib_path")}._modidx:d']
     },
     **setup_cfg)
